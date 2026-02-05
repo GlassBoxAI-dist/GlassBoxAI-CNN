@@ -1,13 +1,14 @@
 # GlassBoxAI-CNN
 
-## **CUDA Convolutional Neural Network**
+## **GPU-Accelerated Convolutional Neural Network**
 
-### *Multi-Language GPU-Accelerated CNN with Formal Verification*
+### *Multi-Language CNN with CUDA/OpenCL Support and Formal Verification*
 
 ---
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![CUDA](https://img.shields.io/badge/CUDA-12.0-green.svg)](https://developer.nvidia.com/cuda-toolkit)
+[![OpenCL](https://img.shields.io/badge/OpenCL-3.0-red.svg)](https://www.khronos.org/opencl/)
 [![Rust](https://img.shields.io/badge/Rust-1.75+-orange.svg)](https://www.rust-lang.org/)
 [![Python](https://img.shields.io/badge/Python-3.8+-blue.svg)](https://www.python.org/)
 [![Node.js](https://img.shields.io/badge/Node.js-14+-green.svg)](https://nodejs.org/)
@@ -21,9 +22,9 @@
 
 ## **Overview**
 
-GlassBoxAI-CNN is a production-ready, CUDA-accelerated Convolutional Neural Network implementation featuring:
+GlassBoxAI-CNN is a production-ready, GPU-accelerated Convolutional Neural Network implementation featuring:
 
-- **CUDA GPU acceleration**: High-performance neural network computations on NVIDIA GPUs
+- **Dual GPU backends**: CUDA for NVIDIA GPUs, OpenCL for AMD/Intel/cross-platform GPU acceleration
 - **Multi-language bindings**: Native support for Rust, Python, Node.js, C, C++, Julia, and Go
 - **Facade pattern architecture**: Clean API separation with deep introspection capabilities
 - **Formal verification**: Kani-verified implementation for memory safety guarantees
@@ -74,6 +75,13 @@ This project demonstrates enterprise-grade software engineering practices includ
 | **Batch Normalization** | Stabilize training with learnable scale/shift parameters |
 | **ONNX Export/Import** | Interoperability with the global AI ecosystem |
 
+### GPU Backends
+
+| Backend | Platform | Features |
+|---------|----------|----------|
+| **CUDA** | NVIDIA GPUs | Full training and inference, optimized for NVIDIA hardware |
+| **OpenCL** | AMD, Intel, NVIDIA, Apple | Cross-platform GPU acceleration via OpenCL 1.2+ |
+
 ### Multi-Language Support
 
 | Language | Binding Technology | Status |
@@ -106,8 +114,8 @@ This project demonstrates enterprise-grade software engineering practices includ
 │                                                                         │
 │  ┌─────────────────────────────────────────────────────────────────┐   │
 │  │                    Rust Core Library                            │   │
-│  │                      (src/cnn.rs)                               │   │
-│  │  • CUDA Kernels  • Adam Optimizer  • Batch Normalization        │   │
+│  │           (src/cnn.rs + src/opencl.rs)                          │   │
+│  │  • CUDA/OpenCL Kernels  • Adam Optimizer  • Batch Normalization │   │
 │  │  • Conv/Pool/FC Layers  • ONNX Export/Import  • JSON I/O        │   │
 │  └─────────────────────────────────────────────────────────────────┘   │
 │                               │                                         │
@@ -136,7 +144,8 @@ GlassBoxAI-CNN/
 │
 ├── src/                        # Rust source code
 │   ├── lib.rs                  # Library entry point
-│   ├── cnn.rs                  # Core CNN implementation
+│   ├── cnn.rs                  # Core CNN implementation (CUDA)
+│   ├── opencl.rs               # OpenCL backend implementation
 │   ├── main.rs                 # CLI binary
 │   ├── python.rs               # Python bindings (PyO3)
 │   ├── nodejs.rs               # Node.js bindings (napi-rs)
@@ -185,8 +194,14 @@ GlassBoxAI-CNN/
 
 | Dependency | Version | Purpose |
 |------------|---------|---------|
-| **CUDA Toolkit** | 12.0+ | GPU acceleration |
 | **Rust** | 1.75+ | Core library compilation |
+
+### GPU Backend (at least one)
+
+| Dependency | Version | Purpose |
+|------------|---------|---------|
+| **CUDA Toolkit** | 12.0+ | NVIDIA GPU acceleration |
+| **OpenCL SDK** | 1.2+ | Cross-platform GPU acceleration (AMD, Intel, NVIDIA, Apple) |
 
 ### Optional (Language Bindings)
 
@@ -206,14 +221,25 @@ GlassBoxAI-CNN/
 
 ## **Installation & Compilation**
 
-### **Rust Library & CLI**
+### **Rust Library & CLI (CUDA)**
 
 ```bash
-# Build release binary and library
+# Build release binary and library with CUDA backend (default)
 cargo build --release
 
 # Run CLI
 ./target/release/facaded_cnn_cuda help
+```
+
+### **Rust Library with OpenCL Backend**
+
+```bash
+# Build with OpenCL backend (cross-platform GPU support)
+cargo build --release --features opencl
+
+# Use in your Rust project
+# [dependencies]
+# facaded_cnn_cuda = { path = ".", features = ["opencl"] }
 ```
 
 ### **Python Bindings**
@@ -293,13 +319,13 @@ cargo build --release --features capi
 
 ## **Language Bindings**
 
-### **Rust API**
+### **Rust API (CUDA)**
 
 ```rust
 use facaded_cnn_cuda::{ConvolutionalNeuralNetworkCUDA, ActivationType, LossType};
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
-    // Create CNN
+    // Create CNN with CUDA backend
     let mut cnn = ConvolutionalNeuralNetworkCUDA::new(
         28, 28, 1,                    // Input dimensions
         &[32, 64],                    // Conv filters
@@ -325,6 +351,44 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     // Save/Load
     cnn.save_to_json("model.json")?;
     let loaded = ConvolutionalNeuralNetworkCUDA::load_from_json("model.json")?;
+
+    Ok(())
+}
+```
+
+### **Rust API (OpenCL)**
+
+```rust
+// Enable with: cargo build --features opencl
+use facaded_cnn_cuda::opencl::{
+    ConvolutionalNeuralNetworkOpenCL, ActivationType, LossType
+};
+
+fn main() -> Result<(), Box<dyn std::error::Error>> {
+    // Create CNN with OpenCL backend (AMD, Intel, NVIDIA, Apple GPUs)
+    let mut cnn = ConvolutionalNeuralNetworkOpenCL::new(
+        28, 28, 1,                    // Input dimensions
+        &[32, 64],                    // Conv filters
+        &[3, 3],                      // Kernel sizes
+        &[2, 2],                      // Pool sizes
+        &[128],                       // FC layers
+        10,                           // Output classes
+        ActivationType::ReLU,
+        ActivationType::Linear,
+        LossType::CrossEntropy,
+        0.001,                        // Learning rate
+        5.0,                          // Gradient clip
+    )?;
+
+    // Same API as CUDA version
+    let input = vec![0.0; 784];
+    let output = cnn.predict(&input)?;
+
+    let target = vec![0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0];
+    let loss = cnn.train_step(&input, &target)?;
+
+    cnn.save_to_json("model.json")?;
+    let loaded = ConvolutionalNeuralNetworkOpenCL::load_from_json("model.json")?;
 
     Ok(())
 }

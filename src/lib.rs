@@ -22,9 +22,9 @@
  * SOFTWARE.
  */
 
-//! # CUDA Convolutional Neural Network Library
+//! # GPU-Accelerated Convolutional Neural Network Library
 //!
-//! A high-performance CNN implementation using CUDA acceleration.
+//! A high-performance CNN implementation with CUDA and OpenCL acceleration.
 //!
 //! ## Rust Example
 //!
@@ -88,6 +88,12 @@ mod nodejs;
 
 #[cfg(feature = "capi")]
 pub mod capi;
+
+#[cfg(feature = "opencl")]
+pub mod opencl;
+
+#[cfg(feature = "opencl")]
+pub use opencl::ConvolutionalNeuralNetworkOpenCL;
 
 pub use cnn::{
     ActivationType,
