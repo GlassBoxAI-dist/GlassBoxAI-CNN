@@ -1,0 +1,46 @@
+{
+  "name": "facaded-cnn-cuda",
+  "version": "0.1.0",
+  "description": "CUDA-accelerated Convolutional Neural Network library",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "author": "Matthew Abbott",
+  "license": "MIT",
+  "keywords": [
+    "cuda",
+    "cnn",
+    "neural-network",
+    "deep-learning",
+    "machine-learning",
+    "gpu",
+    "napi-rs"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/GlassBoxAI/GlassBoxAI-CNN"
+  },
+  "napi": {
+    "name": "facaded-cnn-cuda",
+    "triples": {
+      "defaults": true,
+      "additional": []
+    }
+  },
+  "engines": {
+    "node": ">= 14"
+  },
+  "scripts": {
+    "build": "napi build --platform --release --features nodejs",
+    "build:debug": "napi build --platform --features nodejs",
+    "prepublishOnly": "napi prepublish -t npm",
+    "test": "node test.js"
+  },
+  "devDependencies": {
+    "@napi-rs/cli": "^2.18.0"
+  },
+  "files": [
+    "index.js",
+    "index.d.ts",
+    "*.node"
+  ]
+}
