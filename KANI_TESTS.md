@@ -28,7 +28,7 @@ cargo kani
 
 ## Verification Categories
 
-The test suite covers 15 security verification categories:
+The test suite covers 19 security verification categories:
 
 ### 1. Strict Bound Checks
 - `verify_parse_args_bounds` - CLI argument parsing bounds
@@ -118,6 +118,58 @@ The test suite covers 15 security verification categories:
 - `verify_dataset_size_limit` - Dataset memory budget (GUI)
 - `verify_training_log_bounded` - Log size limit (GUI)
 - `verify_gui_property_limits` - Property value bounds (GUI)
+
+### 16. FFI C Boundary Safety
+Located in `src/kani/ffi_c_boundary.rs` — 43 Kani proofs covering:
+- Signed-to-unsigned conversion safety (c_int → usize)
+- Output buffer overflow prevention
+- NaN/Infinity parameter rejection (learning rate, gradient clip, dropout)
+- Enum variant validation (ActivationType, LossType)
+- CnnConfig array length bounds
+- Error string NUL-byte sanitization
+- No-panic guarantee for all validators
+- ABI type compatibility (f64, i32)
+- Input array NaN/Inf detection
+- Resource limits at FFI boundary
+- Setter value validation
+- End-to-end pipeline validation (predict, train, create)
+
+### 17. CUDA Backend FFI Safety
+Located in `src/kani/ffi_cuda_boundary.rs` — 42 Kani proofs + unit tests across 15 categories (A-O):
+- Conv/Pool/FC layer buffer size correctness
+- CUDA grid/block dimension safety for all kernel types
+- Weight index validity for flat buffers (FC and Conv 4D)
+- Transfer size non-zero and alignment (f64/8-byte)
+- Pooling layer buffer sizing and dimension reduction
+- Kernel launch parameter overflow prevention
+- Flattened feature, softmax/logits, gradient buffer sizing
+- Adam optimizer M/V buffer sizing
+- End-to-end forward pass buffer chain (conv→pool→flatten→FC→output)
+
+### 18. OpenCL Backend FFI Safety
+Located in `src/kani/ffi_opencl_boundary.rs` — 42 Kani proofs + unit tests across 15 categories (A-O):
+- Conv/Pool/FC layer buffer size for clCreateBuffer
+- OpenCL global/local work size safety (divisible, covers all items)
+- Weight index validity for flat OpenCL buffers
+- Transfer alignment for clEnqueueRead/WriteBuffer
+- Work group size power-of-two property
+- Same buffer chain validation as CUDA, adapted for OpenCL
+
+### 19. Polyglot FFI Safety
+Located in `src/kani/ffi_polyglot.rs` — 48 Kani proofs + unit tests across 15 categories (A-O):
+- CnnConfig struct field validation (width, height, channels, output, LR, gradient clip)
+- CnnError enum repr(C) ABI compatibility
+- CnnActivationType/CnnLossType enum roundtrip safety
+- Handle lifecycle safety (create/destroy null checks)
+- Null pointer rejection across all C API functions
+- String parameter NUL-termination safety
+- Output buffer capacity contracts
+- Thread-local error storage safety
+- Version string NUL-termination
+- Batch norm flag bool mapping
+- Config array pointer validation
+- ABI layout for repr(C) types (c_int, c_double, pointer)
+- End-to-end polyglot call chains (create, predict, train, setter)
 
 ## Expected Results
 
