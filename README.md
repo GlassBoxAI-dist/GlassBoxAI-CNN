@@ -14,6 +14,8 @@
 [![Node.js](https://img.shields.io/badge/Node.js-14+-green.svg)](https://nodejs.org/)
 [![Go](https://img.shields.io/badge/Go-1.21+-00ADD8.svg)](https://go.dev/)
 [![Julia](https://img.shields.io/badge/Julia-1.6+-9558B2.svg)](https://julialang.org/)
+[![C#](https://img.shields.io/badge/C%23-.NET%208.0-512BD4.svg)](https://dotnet.microsoft.com/)
+[![Zig](https://img.shields.io/badge/Zig-0.13+-F7A41D.svg)](https://ziglang.org/)
 [![ONNX](https://img.shields.io/badge/ONNX-Export%2FImport-purple.svg)](https://onnx.ai/)
 [![Kani](https://img.shields.io/badge/Kani-Verified-brightgreen.svg)](https://model-checking.github.io/kani/)
 [![CISA Compliant](https://img.shields.io/badge/CISA-Secure%20by%20Design-blue.svg)](https://www.cisa.gov/securebydesign)
@@ -25,7 +27,7 @@
 GlassBoxAI-CNN is a production-ready, GPU-accelerated Convolutional Neural Network implementation featuring:
 
 - **Dual GPU backends**: CUDA for NVIDIA GPUs, OpenCL for AMD/Intel/cross-platform GPU acceleration
-- **Multi-language bindings**: Native support for Rust, Python, Node.js, C, C++, Julia, and Go
+- **Multi-language bindings**: Native support for Rust, Python, Node.js, C, C++, Julia, Go, C#, and Zig
 - **Facade pattern architecture**: Clean API separation with deep introspection capabilities
 - **Formal verification**: Kani-verified implementation for memory safety guarantees
 - **Qt GUI application**: Visual training interface
@@ -50,11 +52,13 @@ This project demonstrates enterprise-grade software engineering practices includ
    - [C++ API](#c-api-1)
    - [Julia API](#julia-api)
    - [Go API](#go-api)
-7. [CLI Reference](#cli-reference)
-8. [Formal Verification with Kani](#formal-verification-with-kani)
-9. [CISA/NSA Compliance](#cisansa-compliance)
-10. [License](#license)
-11. [Author](#author)
+   - [C# API](#c-api-2)
+   - [Zig API](#zig-api)
+   7. [CLI Reference](#cli-reference)
+   8. [Formal Verification with Kani](#formal-verification-with-kani)
+   9. [CISA/NSA Compliance](#cisansa-compliance)
+   10. [License](#license)
+   11. [Author](#author)
 
 ---
 
@@ -93,13 +97,15 @@ This project demonstrates enterprise-grade software engineering practices includ
 | **C++** | FFI + RAII Wrapper | ✓ Full API |
 | **Julia** | ccall | ✓ Full API |
 | **Go** | cgo | ✓ Full API |
+| **C#** | P/Invoke | ✓ Full API |
+| **Zig** | C FFI | ✓ Full API |
 
 ### Safety & Security
 
 | Feature | Technology |
 |---------|------------|
 | **Memory Safety** | Rust ownership model |
-| **Formal Verification** | Kani proof harnesses (40+ proofs) |
+| **Formal Verification** | Kani proof harnesses (175+ proofs across 19 categories) |
 | **Bounds Checking** | Verified array access |
 | **Input Validation** | CLI argument validation |
 
@@ -121,10 +127,10 @@ This project demonstrates enterprise-grade software engineering practices includ
 │                               │                                         │
 │  ┌────────────────────────────┼────────────────────────────────────┐   │
 │  │                    Language Bindings                             │   │
-│  ├──────────┬──────────┬──────┴───┬──────────┬──────────┬─────────┤   │
-│  │  Python  │  Node.js │   C/C++  │   Julia  │    Go    │   CLI   │   │
-│  │  (PyO3)  │ (napi-rs)│   (FFI)  │  (ccall) │  (cgo)   │  (Rust) │   │
-│  └──────────┴──────────┴──────────┴──────────┴──────────┴─────────┘   │
+│  ├────────┬────────┬──────┴──┬────────┬──────┬──────┬──────┬─────────┤│
+│  │ Python │Node.js │  C/C++ │ Julia  │  Go  │  C#  │ Zig  │   CLI   ││
+│  │ (PyO3) │(napi)  │  (FFI) │(ccall) │(cgo) │(P/I) │(FFI) │  (Rust) ││
+│  └────────┴────────┴────────┴────────┴──────┴──────┴──────┴─────────┘│
 │                                                                         │
 │  ┌─────────────────────────────────────────────────────────────────┐   │
 │  │                     Security Features                            │   │
@@ -150,7 +156,12 @@ GlassBoxAI-CNN/
 │   ├── python.rs               # Python bindings (PyO3)
 │   ├── nodejs.rs               # Node.js bindings (napi-rs)
 │   ├── capi.rs                 # C FFI bindings
-│   └── kani_tests.rs           # Formal verification proofs
+│   ├── kani_tests.rs           # Formal verification proofs
+│   └── kani/                   # Extended verification harnesses
+│       ├── ffi_c_boundary.rs   # FFI C boundary safety
+│       ├── ffi_cuda_boundary.rs # CUDA backend FFI safety
+│       ├── ffi_opencl_boundary.rs # OpenCL backend FFI safety
+│       └── ffi_polyglot.rs     # Polyglot FFI safety
 │
 ├── include/                    # C/C++ headers
 │   ├── facaded_cnn_cuda.h      # C API header
@@ -170,6 +181,13 @@ GlassBoxAI-CNN/
 │   ├── go.mod                  # Go module
 │   ├── cnn.go                  # Go bindings
 │   └── cnn_test.go             # Go tests
+│
+├── csharp/                     # C# wrapper
+│   └── FacadedCnnCuda.cs       # .NET bindings (P/Invoke)
+│
+├── zig/                        # Zig wrapper
+│   ├── facaded_cnn_cuda.zig    # Zig bindings (C FFI)
+│   └── build.zig               # Build configuration
 │
 ├── gui/                        # Qt GUI application
 │   ├── Cargo.toml
@@ -214,6 +232,8 @@ GlassBoxAI-CNN/
 | **GCC/Clang** | 11+ | C/C++ compilation |
 | **Julia** | 1.6+ | Julia bindings |
 | **Go** | 1.21+ | Go bindings |
+| **C# / .NET SDK** | 8.0+ | C# bindings |
+| **Zig** | 0.13+ | Zig bindings |
 | **Kani** | 0.67+ | Formal verification |
 | **Qt 6** | 6.x | GUI version |
 
@@ -604,6 +624,83 @@ func main() {
 }
 ```
 
+### **C# API**
+
+```csharp
+using FacadedCnnCuda;
+
+using var cnn = new CNN(
+    inputWidth: 28, inputHeight: 28, inputChannels: 1,
+    convFilters: new[] { 32, 64 }, kernelSizes: new[] { 3, 3 },
+    poolSizes: new[] { 2, 2 }, fcSizes: new[] { 128 }, outputSize: 10,
+    hiddenActivation: ActivationType.ReLU,
+    outputActivation: ActivationType.Linear,
+    lossType: LossType.CrossEntropy,
+    learningRate: 0.001, gradientClip: 5.0
+);
+
+// Predict
+var input = new double[784];
+var output = cnn.Predict(input);
+Console.WriteLine($"Predicted class: {Array.IndexOf(output, output.Max())}");
+
+// Train
+var target = new double[10];
+target[3] = 1.0;
+double loss = cnn.TrainStep(input, target);
+Console.WriteLine($"Loss: {loss}");
+
+// Save/Load
+cnn.SaveToJson("model.json");
+using var loaded = CNN.LoadFromJson("model.json");
+
+// ONNX
+cnn.ExportToOnnx("model.onnx");
+using var onnxCnn = CNN.ImportFromOnnx("model.onnx");
+```
+
+### **Zig API**
+
+```zig
+const cnn_mod = @import("facaded_cnn_cuda");
+
+pub fn main() !void {
+    const conv_filters = [_]c_int{ 32, 64 };
+    const kernel_sizes = [_]c_int{ 3, 3 };
+    const pool_sizes = [_]c_int{ 2, 2 };
+    const fc_sizes = [_]c_int{128};
+
+    var net = try cnn_mod.CNN.init(.{
+        .input_width = 28,
+        .input_height = 28,
+        .input_channels = 1,
+        .conv_filters = &conv_filters,
+        .conv_filters_len = 2,
+        .kernel_sizes = &kernel_sizes,
+        .kernel_sizes_len = 2,
+        .pool_sizes = &pool_sizes,
+        .pool_sizes_len = 2,
+        .fc_sizes = &fc_sizes,
+        .fc_sizes_len = 1,
+        .output_size = 10,
+    });
+    defer net.deinit();
+
+    // Predict
+    var input: [784]f64 = .{0.0} ** 784;
+    var output_buf: [10]f64 = undefined;
+    const output = try net.predict(&input, &output_buf);
+
+    // Train
+    var target: [10]f64 = .{0.0} ** 10;
+    target[3] = 1.0;
+    const loss = try net.trainStep(&input, &target);
+
+    // Save
+    try net.saveToJson("model.json");
+}
+```
+
 ---
 
 ## **CLI Reference**
@@ -679,34 +776,12 @@ facaded_cnn_cuda import-onnx --input=model.onnx --save=model.json
 
 The implementation includes **Kani formal verification proofs** that mathematically prove the absence of certain classes of bugs.
 
-### Verification Categories
-
-| Category | Description |
-|----------|-------------|
-| **Strict Bound Checks** | Array/collection indexing safety |
-| **Pointer Validity** | Slice-to-pointer conversion safety |
-| **No-Panic Guarantee** | Enum and command handling safety |
-| **Integer Overflow Prevention** | Weight size, dimension calculations |
-| **Division-by-Zero Exclusion** | Launch config, pooling stride |
-| **Input Sanitization Bounds** | Loop iteration limits |
-| **Floating-Point Sanity** | NaN/Infinity prevention |
-| **Resource Limit Compliance** | Memory budget enforcement |
-
-### Key Proofs
-
-- `verify_conv_filter_indexing` ✓
-- `verify_output_indexing` ✓
-- `verify_weight_size_no_overflow` ✓
-- `verify_output_dimension_no_overflow` ✓
-- `verify_activation_type_no_panic` ✓
-- `verify_relu_no_nan` ✓
-- `verify_gradient_clipping` ✓
-
 ### Running Verification
 
 ```bash
 # Install Kani
 cargo install --locked kani-verifier
+kani setup
 
 # Run all proofs
 cargo kani
@@ -714,6 +789,157 @@ cargo kani
 # Run specific proof
 cargo kani --harness verify_conv_filter_indexing
 ```
+
+### Verification Harnesses (Categories 1–15)
+
+#### 1. Strict Bound Checks
+- `verify_parse_args_bounds` — CLI argument parsing bounds
+- `verify_conv_filter_indexing` — Convolutional filter array access
+- `verify_output_indexing` — Output tensor indexing
+- `verify_dataset_indexing` — Dataset sample access (GUI)
+- `verify_image_buffer_indexing` — Image buffer access (GUI)
+
+#### 2. Pointer Validity Proofs
+- `verify_slice_to_ptr_validity` — Slice-to-pointer conversions
+- `verify_vec_ptr_validity` — Vector pointer validity (GUI)
+
+#### 3. No-Panic Guarantee
+- `verify_activation_type_no_panic` — ActivationType enum handling
+- `verify_loss_type_no_panic` — LossType enum handling
+- `verify_command_parsing_no_panic` — Command enum handling (CLI)
+- `verify_progress_calculation_no_panic` — Progress percentage (GUI)
+
+#### 4. Integer Overflow Prevention
+- `verify_weight_size_no_overflow` — Weight buffer size calculation
+- `verify_output_dimension_no_overflow` — Output dimension calculation
+- `verify_adam_timestep_no_overflow` — Adam optimizer timestep
+- `verify_image_size_no_overflow` — Image buffer size (GUI)
+- `verify_sample_count_no_overflow` — Dataset sample count (GUI)
+
+#### 5. Division-by-Zero Exclusion
+- `verify_launch_config_no_div_zero` — CUDA launch configuration
+- `verify_pooling_stride_no_div_zero` — Pooling stride calculation
+- `verify_batch_average_no_div_zero` — Batch average loss
+- `verify_accuracy_no_div_zero` — Accuracy calculation (GUI)
+- `verify_progress_no_div_zero` — Progress calculation (GUI)
+
+#### 6. Global State Consistency
+- `verify_is_training_state_consistency` — Training mode state
+- `verify_stop_requested_state` — Stop training flag (GUI)
+- `verify_network_exists_state` — Network initialization state (GUI)
+
+#### 7. Deadlock-Free Logic
+- `verify_no_lock_hierarchy_violation` — Arc reference counting
+- `verify_no_recursive_borrow` — Pin borrow semantics (GUI)
+
+#### 8. Input Sanitization Bounds
+- `verify_conv_layer_iteration_bounded` — Conv layer loop bounds
+- `verify_fc_layer_iteration_bounded` — FC layer loop bounds
+- `verify_epoch_iteration_bounded` — Training epoch bounds
+- `verify_sample_loop_bounded` — Sample iteration bounds (GUI)
+- `verify_class_loop_bounded` — Class iteration bounds (GUI)
+
+#### 9. Result Coverage Audit
+- `verify_result_handling_coverage` — Result<T, E> handling
+- `verify_network_creation_result_handled` — Network creation (GUI)
+- `verify_train_step_result_handled` — Training step results (GUI)
+
+#### 10. Memory Leak Prevention
+- `verify_vec_allocation_bounds` — Vector allocation limits
+- `verify_dataset_clear_releases_memory` — Dataset cleanup (GUI)
+- `verify_image_vec_bounded_allocation` — Image allocation (GUI)
+
+#### 11. Constant-Time Execution
+- `verify_activation_constant_time` — ReLU timing analysis
+- `verify_argmax_no_secret_timing` — Argmax comparison (GUI)
+
+#### 12. State Machine Integrity
+- `verify_training_state_transitions` — Training state changes
+- `verify_training_state_machine` — Train prerequisites (GUI)
+- `verify_prediction_requires_network` — Prediction prerequisites (GUI)
+
+#### 13. Enum Exhaustion
+- `verify_activation_type_exhaustive` — All ActivationType variants
+- `verify_loss_type_exhaustive` — All LossType variants
+- `verify_command_exhaustive` — All Command variants (CLI)
+- `verify_activation_enum_exhaustive` — GUI activation handling
+- `verify_loss_enum_exhaustive` — GUI loss handling
+
+#### 14. Floating-Point Sanity
+- `verify_relu_no_nan` — ReLU output validity
+- `verify_softmax_denominator_positive` — Softmax denominator
+- `verify_gradient_clipping` — Gradient clip bounds
+- `verify_softmax_output_valid` — Softmax probability (GUI)
+- `verify_loss_finite` — Loss value finiteness (GUI)
+- `verify_radius_calculation_valid` — Synthetic data radius (GUI)
+
+#### 15. Resource Limit Compliance
+- `verify_weight_allocation_limit` — Weight memory budget
+- `verify_fc_layer_allocation_limit` — FC layer memory budget
+- `verify_output_buffer_size_limit` — Output buffer memory
+- `verify_dataset_size_limit` — Dataset memory budget (GUI)
+- `verify_training_log_bounded` — Log size limit (GUI)
+- `verify_gui_property_limits` — Property value bounds (GUI)
+
+### FFI C Boundary Safety (Category 16)
+
+Located in `src/kani/ffi_c_boundary.rs` — 43 Kani proofs covering:
+
+- Signed-to-unsigned conversion safety (c_int → usize)
+- Output buffer overflow prevention
+- NaN/Infinity parameter rejection (learning rate, gradient clip, dropout)
+- Enum variant validation (ActivationType, LossType)
+- CnnConfig array length bounds
+- Error string NUL-byte sanitization
+- No-panic guarantee for all validators
+- ABI type compatibility (f64, i32)
+- Input array NaN/Inf detection
+- Resource limits at FFI boundary
+- Setter value validation
+- End-to-end pipeline validation (predict, train, create)
+
+### CUDA Backend FFI Safety (Category 17)
+
+Located in `src/kani/ffi_cuda_boundary.rs` — 42 Kani proofs + unit tests across 15 categories (A–O):
+
+- Conv/Pool/FC layer buffer size correctness
+- CUDA grid/block dimension safety for all kernel types
+- Weight index validity for flat buffers (FC and Conv 4D)
+- Transfer size non-zero and alignment (f64/8-byte)
+- Pooling layer buffer sizing and dimension reduction
+- Kernel launch parameter overflow prevention
+- Flattened feature, softmax/logits, gradient buffer sizing
+- Adam optimizer M/V buffer sizing
+- End-to-end forward pass buffer chain (conv→pool→flatten→FC→output)
+
+### OpenCL Backend FFI Safety (Category 18)
+
+Located in `src/kani/ffi_opencl_boundary.rs` — 42 Kani proofs + unit tests across 15 categories (A–O):
+
+- Conv/Pool/FC layer buffer size for clCreateBuffer
+- OpenCL global/local work size safety (divisible, covers all items)
+- Weight index validity for flat OpenCL buffers
+- Transfer alignment for clEnqueueRead/WriteBuffer
+- Work group size power-of-two property
+- Same buffer chain validation as CUDA, adapted for OpenCL
+
+### Polyglot FFI Safety (Category 19)
+
+Located in `src/kani/ffi_polyglot.rs` — 48 Kani proofs + unit tests across 15 categories (A–O):
+
+- CnnConfig struct field validation (width, height, channels, output, LR, gradient clip)
+- CnnError enum repr(C) ABI compatibility
+- CnnActivationType/CnnLossType enum roundtrip safety
+- Handle lifecycle safety (create/destroy null checks)
+- Null pointer rejection across all C API functions
+- String parameter NUL-termination safety
+- Output buffer capacity contracts
+- Thread-local error storage safety
+- Version string NUL-termination
+- Batch norm flag bool mapping
+- Config array pointer validation
+- ABI layout for repr(C) types (c_int, c_double, pointer)
+- End-to-end polyglot call chains (create, predict, train, setter)
 
 ---
 
