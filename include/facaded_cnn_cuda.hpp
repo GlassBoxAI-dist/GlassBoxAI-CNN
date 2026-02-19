@@ -1,3 +1,7 @@
+/**
+ * @file
+ * @ingroup CNN_Internal_Logic
+ */
 /*
  * MIT License
  *

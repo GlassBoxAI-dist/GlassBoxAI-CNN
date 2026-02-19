@@ -1,3 +1,7 @@
+/**
+ * @file
+ * @ingroup CNN_Wrappers
+ */
 // MIT License
 //
 // Copyright (c) 2025 Matthew Abbott
@@ -351,3 +355,4 @@ pub fn activationToString(activation: ActivationType) []const u8 {
 pub fn lossToString(loss: LossType) []const u8 {
     return std.mem.span(cnn_loss_to_string(loss));
 }
+

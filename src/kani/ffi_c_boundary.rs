@@ -1,3 +1,5 @@
+//! @file
+//! @ingroup CNN_Core_Verified
 /*
  * MIT License
  * Copyright (c) 2025 Matthew Abbott
@@ -603,3 +605,4 @@ fn verify_ffi_complete_create_pipeline() {
         assert!(av.unwrap() <= MAX_CONFIG_ARRAY_LEN, "Array len bounded");
     }
 }
+

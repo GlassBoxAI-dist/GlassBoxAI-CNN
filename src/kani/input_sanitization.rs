@@ -1,3 +1,5 @@
+//! @file
+//! @ingroup CNN_Core_Verified
 /*
  * MIT License
  * Copyright (c) 2025 Matthew Abbott
@@ -46,3 +48,4 @@ fn verify_epoch_iteration_bounded() {
         assert!(count <= 50, "Epoch iteration must be bounded");
     }
 }
+

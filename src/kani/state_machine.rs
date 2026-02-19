@@ -1,3 +1,5 @@
+//! @file
+//! @ingroup CNN_Core_Verified
 /*
  * MIT License
  * Copyright (c) 2025 Matthew Abbott
@@ -15,3 +17,4 @@ fn verify_training_state_transitions() {
 
     assert!(new_state == true || new_state == false);
 }
+

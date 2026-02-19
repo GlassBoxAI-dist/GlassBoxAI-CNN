@@ -1,3 +1,5 @@
+//! @file
+//! @ingroup CNN_Core_Verified
 /*
  * MIT License
  * Copyright (c) 2025 Matthew Abbott
@@ -16,3 +18,4 @@ fn verify_vec_allocation_bounds() {
         let _vec: Vec<f64> = Vec::with_capacity(size);
     }
 }
+

@@ -1,3 +1,5 @@
+//! @file
+//! @ingroup CNN_Core_Verified
 /*
  * MIT License
  * Copyright (c) 2025 Matthew Abbott
@@ -563,3 +565,4 @@ mod kani_proofs {
         assert!(buffer_size <= MAX_BUFFER, "Output buffer within memory budget");
     }
 }
+

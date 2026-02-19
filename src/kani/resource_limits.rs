@@ -1,3 +1,5 @@
+//! @file
+//! @ingroup CNN_Core_Verified
 /*
  * MIT License
  * Copyright (c) 2025 Matthew Abbott
@@ -55,3 +57,4 @@ fn verify_output_buffer_size_limit() {
     const MAX_BUFFER: usize = 16_777_216;
     assert!(buffer_size <= MAX_BUFFER, "Output buffer within memory budget");
 }
+

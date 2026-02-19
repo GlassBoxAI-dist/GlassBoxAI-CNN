@@ -1,3 +1,5 @@
+//! @file
+//! @ingroup CNN_Internal_Logic
 /*
  * MIT License
  * Copyright (c) 2025 Matthew Abbott
@@ -22,3 +24,4 @@ fn main() {
         app.exec();
     }
 }
+

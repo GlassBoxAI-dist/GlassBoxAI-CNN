@@ -1,3 +1,5 @@
+//! @file
+//! @ingroup CNN_Core_Verified
 /*
  * MIT License
  * Copyright (c) 2025 Matthew Abbott
@@ -49,3 +51,4 @@ fn verify_command_exhaustive() {
 
     assert!(result >= 0 && result <= 5, "All command variants must be handled");
 }
+

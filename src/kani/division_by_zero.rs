@@ -1,3 +1,5 @@
+//! @file
+//! @ingroup CNN_Core_Verified
 /*
  * MIT License
  * Copyright (c) 2025 Matthew Abbott
@@ -43,3 +45,4 @@ fn verify_batch_average_no_div_zero() {
     let avg_loss = total_loss / num_samples as f64;
     assert!(avg_loss.is_finite() || num_samples > 0, "Average must be computable");
 }
+

@@ -1,3 +1,5 @@
+//! @file
+//! @ingroup CNN_Core_Verified
 /*
  * MIT License
  * Copyright (c) 2025 Matthew Abbott
@@ -27,3 +29,4 @@ mod resource_limits;
 mod result_coverage;
 mod state_consistency;
 mod state_machine;
+

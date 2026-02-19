@@ -1,3 +1,5 @@
+//! @file
+//! @ingroup CNN_Wrappers
 /*
  * MIT License
  *
@@ -511,3 +513,4 @@ impl CNN {
         Ok(cnn.apply_batch_norm(&input, layer_idx as usize, training))
     }
 }
+

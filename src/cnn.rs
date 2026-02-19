@@ -1,3 +1,5 @@
+//! @file
+//! @ingroup CNN_Internal_Logic
 /*
  * MIT License
  *
@@ -1961,3 +1963,4 @@ pub fn parse_command(cmd: &str) -> Command {
         _ => Command::None,
     }
 }
+

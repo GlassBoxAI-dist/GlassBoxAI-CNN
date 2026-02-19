@@ -1,3 +1,5 @@
+//! @file
+//! @ingroup CNN_Core_Verified
 /*
  * MIT License
  * Copyright (c) 2025 Matthew Abbott
@@ -61,3 +63,4 @@ fn verify_adam_timestep_no_overflow() {
     let new_t = adam_t.checked_add(1);
     assert!(new_t.is_some(), "Adam timestep increment must not overflow");
 }
+

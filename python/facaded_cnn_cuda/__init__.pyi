@@ -1,3 +1,5 @@
+## @file
+## @ingroup CNN_Wrappers
 """Type stubs for facaded_cnn_cuda."""
 
 from typing import List, Optional

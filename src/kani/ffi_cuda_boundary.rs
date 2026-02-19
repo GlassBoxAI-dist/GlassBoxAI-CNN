@@ -1,3 +1,5 @@
+//! @file
+//! @ingroup CNN_Core_Verified
 /*
  * MIT License
  * Copyright (c) 2025 Matthew Abbott
@@ -604,3 +606,4 @@ mod unit_tests {
         assert!(((2 * c + 0) * k + 2) * k + 2 < f * c * k * k);
     }
 }
+

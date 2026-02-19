@@ -1,3 +1,5 @@
+//! @file
+//! @ingroup CNN_Internal_Logic
 /*
  * MIT License
  *
@@ -688,3 +690,4 @@ pub extern "C" fn cnn_loss_to_string(loss: CnnLossType) -> *const c_char {
         CnnLossType::CrossEntropy => b"crossentropy\0".as_ptr() as *const c_char,
     }
 }
+

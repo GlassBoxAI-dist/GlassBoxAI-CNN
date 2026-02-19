@@ -1,3 +1,5 @@
+//! @file
+//! @ingroup CNN_Internal_Logic
 /*
  * MIT License
  * Copyright (c) 2025 Matthew Abbott
@@ -551,3 +553,4 @@ impl qobject::CNNBridge {
         QString::from(format!("Receptive field [layer={}, filter={}, y={}, x={}] - not yet implemented", layer_idx, filter_idx, y, x))
     }
 }
+

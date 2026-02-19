@@ -1,3 +1,5 @@
+//! @file
+//! @ingroup CNN_Internal_Logic
 /*
  * MIT License
  *
@@ -587,3 +589,4 @@ pub fn facaded_cnn_cuda(m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add_class::<PyCNN>()?;
     Ok(())
 }
+

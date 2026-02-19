@@ -1,3 +1,5 @@
+//! @file
+//! @ingroup CNN_Core_Verified
 /*
  * MIT License
  * Copyright (c) 2025 Matthew Abbott
@@ -17,3 +19,4 @@ fn verify_activation_constant_time() {
 
     assert!(relu_result >= 0.0);
 }
+

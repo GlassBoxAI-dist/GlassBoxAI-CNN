@@ -1,3 +1,5 @@
+//! @file
+//! @ingroup CNN_Internal_Logic
 /*
  * MIT License
  *
@@ -110,3 +112,4 @@ pub use cnn::{
     parse_command,
     parse_loss,
 };
+

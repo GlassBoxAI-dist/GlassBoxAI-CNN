@@ -1,4 +1,8 @@
 /**
+ * @file
+ * @ingroup CNN_Wrappers
+ */
+/**
  * CUDA-accelerated Convolutional Neural Network library.
  *
  * This package provides a high-performance CNN implementation using CUDA acceleration,

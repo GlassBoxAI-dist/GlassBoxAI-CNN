@@ -1,3 +1,5 @@
+//! @file
+//! @ingroup CNN_Core_Verified
 /*
  * MIT License
  * Copyright (c) 2025 Matthew Abbott
@@ -51,3 +53,4 @@ fn verify_gradient_clipping() {
     assert!(clipped >= -1.0 && clipped <= 1.0, "Clipped gradient must be in [-1, 1]");
     assert!(clipped.is_finite(), "Clipped gradient must be finite");
 }
+

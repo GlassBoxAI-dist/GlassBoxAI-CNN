@@ -1,3 +1,5 @@
+//! @file
+//! @ingroup CNN_Core_Verified
 /*
  * MIT License
  * Copyright (c) 2025 Matthew Abbott
@@ -20,3 +22,4 @@ fn verify_slice_to_ptr_validity() {
     assert!(!ptr.is_null(), "Pointer must not be null");
     assert!(ptr.align_offset(std::mem::align_of::<f64>()) == 0, "Pointer must be aligned");
 }
+

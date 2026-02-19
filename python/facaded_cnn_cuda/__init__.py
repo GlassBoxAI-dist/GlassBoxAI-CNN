@@ -1,3 +1,5 @@
+## @file
+## @ingroup CNN_Wrappers
 """
 CUDA-accelerated Convolutional Neural Network library.
 

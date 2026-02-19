@@ -1,3 +1,7 @@
+/**
+ * @file
+ * @ingroup CNN_Wrappers
+ */
 /*
 MIT License
 

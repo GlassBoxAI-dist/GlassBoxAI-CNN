@@ -1,3 +1,5 @@
+//! @file
+//! @ingroup CNN_Core_Verified
 /*
  * MIT License
  * Copyright (c) 2025 Matthew Abbott
@@ -15,3 +17,4 @@ fn verify_no_lock_hierarchy_violation() {
 
     assert!(refcount >= 1, "Arc reference count must be at least 1");
 }
+

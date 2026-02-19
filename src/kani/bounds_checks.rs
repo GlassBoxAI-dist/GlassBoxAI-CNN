@@ -1,3 +1,5 @@
+//! @file
+//! @ingroup CNN_Core_Verified
 /*
  * MIT License
  * Copyright (c) 2025 Matthew Abbott
@@ -74,3 +76,4 @@ fn verify_output_indexing() {
     let out_idx = f * output_h * output_w + oh * output_w + ow;
     assert!(out_idx < total_size, "Output index must be in bounds");
 }
+

@@ -1,3 +1,5 @@
+//! @file
+//! @ingroup CNN_Core_Verified
 /*
  * MIT License
  * Copyright (c) 2025 Matthew Abbott
@@ -13,3 +15,4 @@ fn verify_is_training_state_consistency() {
 
     assert!(is_training == true || is_training == false);
 }
+

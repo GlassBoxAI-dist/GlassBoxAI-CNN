@@ -1,3 +1,5 @@
+//! @file
+//! @ingroup CNN_GPU_Accelerated
 /*
  * MIT License
  *
@@ -1672,3 +1674,4 @@ impl ConvolutionalNeuralNetworkOpenCL {
         output
     }
 }
+

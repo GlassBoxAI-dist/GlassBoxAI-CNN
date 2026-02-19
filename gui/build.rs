@@ -1,3 +1,5 @@
+//! @file
+//! @ingroup CNN_Internal_Logic
 use cxx_qt_build::{CxxQtBuilder, QmlModule};
 
 fn main() {
@@ -12,3 +14,4 @@ fn main() {
         })
         .build();
 }
+

@@ -1,3 +1,5 @@
+//! @file
+//! @ingroup CNN_Core_Verified
 /*
  * MIT License
  * Copyright (c) 2025 Matthew Abbott
@@ -568,3 +570,4 @@ mod kani_proofs {
         assert!(progress <= 100, "Progress must not exceed 100");
     }
 }
+

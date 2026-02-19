@@ -1,4 +1,8 @@
 /**
+ * @file
+ * @ingroup CNN_Internal_Logic
+ */
+/**
  * CUDA-accelerated Convolutional Neural Network library.
  *
  * @module facaded-cnn-cuda
