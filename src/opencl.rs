@@ -1600,6 +1600,18 @@ impl ConvolutionalNeuralNetworkOpenCL {
         self.dropout_rate = rate;
     }
 
+    pub fn set_hidden_activation(&mut self, act: ActivationType) {
+        self.hidden_activation = act;
+    }
+
+    pub fn set_output_activation(&mut self, act: ActivationType) {
+        self.output_activation = act;
+    }
+
+    pub fn set_loss_function(&mut self, loss: LossType) {
+        self.loss_function = loss;
+    }
+
     pub fn get_hidden_activation(&self) -> ActivationType {
         self.hidden_activation
     }

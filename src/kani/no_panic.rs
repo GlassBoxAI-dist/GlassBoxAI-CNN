@@ -43,7 +43,7 @@ fn verify_loss_type_no_panic() {
 #[kani::proof]
 fn verify_command_parsing_no_panic() {
     let cmd_type: u8 = kani::any();
-    kani::assume(cmd_type < 6);
+    kani::assume(cmd_type < 9);
 
     let command = match cmd_type {
         0 => Command::None,
@@ -52,6 +52,9 @@ fn verify_command_parsing_no_panic() {
         3 => Command::Predict,
         4 => Command::Info,
         5 => Command::Help,
+        6 => Command::ExportOnnx,
+        7 => Command::ImportOnnx,
+        8 => Command::Mutate,
         _ => unreachable!(),
     };
 

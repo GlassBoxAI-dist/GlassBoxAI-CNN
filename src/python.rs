@@ -482,6 +482,42 @@ impl PyCNN {
         Ok(())
     }
 
+    /// Sets the hidden activation type.
+    ///
+    /// Args:
+    ///     activation: Activation type string ('sigmoid', 'tanh', 'relu', 'linear')
+    pub fn set_hidden_activation(&self, activation: &str) -> PyResult<()> {
+        let mut cnn = self.inner.lock().map_err(|e| {
+            PyValueError::new_err(format!("Failed to acquire lock: {}", e))
+        })?;
+        cnn.set_hidden_activation(crate::parse_activation(activation));
+        Ok(())
+    }
+
+    /// Sets the output activation type.
+    ///
+    /// Args:
+    ///     activation: Activation type string ('sigmoid', 'tanh', 'relu', 'linear')
+    pub fn set_output_activation(&self, activation: &str) -> PyResult<()> {
+        let mut cnn = self.inner.lock().map_err(|e| {
+            PyValueError::new_err(format!("Failed to acquire lock: {}", e))
+        })?;
+        cnn.set_output_activation(crate::parse_activation(activation));
+        Ok(())
+    }
+
+    /// Sets the loss function type.
+    ///
+    /// Args:
+    ///     loss_type: Loss type string ('mse', 'crossentropy')
+    pub fn set_loss_function(&self, loss_type: &str) -> PyResult<()> {
+        let mut cnn = self.inner.lock().map_err(|e| {
+            PyValueError::new_err(format!("Failed to acquire lock: {}", e))
+        })?;
+        cnn.set_loss_function(crate::parse_loss(loss_type));
+        Ok(())
+    }
+
     /// Returns the hidden activation type as a string.
     #[getter]
     pub fn hidden_activation(&self) -> PyResult<String> {

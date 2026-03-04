@@ -47,8 +47,11 @@ fn verify_command_exhaustive() {
         Command::Predict => 3,
         Command::Info => 4,
         Command::Help => 5,
+        Command::ExportOnnx => 6,
+        Command::ImportOnnx => 7,
+        Command::Mutate => 8,
     };
 
-    assert!(result >= 0 && result <= 5, "All command variants must be handled");
+    assert!(result >= 0 && result <= 8, "All command variants must be handled");
 }
 

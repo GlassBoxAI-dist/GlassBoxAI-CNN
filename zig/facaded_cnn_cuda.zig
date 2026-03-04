@@ -128,6 +128,9 @@ extern "c" fn cnn_set_dropout_rate(handle: ?*CnnHandle, rate: f64) void;
 extern "c" fn cnn_get_hidden_activation(handle: ?*const CnnHandle) ActivationType;
 extern "c" fn cnn_get_output_activation(handle: ?*const CnnHandle) ActivationType;
 extern "c" fn cnn_get_loss_function(handle: ?*const CnnHandle) LossType;
+extern "c" fn cnn_set_hidden_activation(handle: ?*CnnHandle, activation: ActivationType) void;
+extern "c" fn cnn_set_output_activation(handle: ?*CnnHandle, activation: ActivationType) void;
+extern "c" fn cnn_set_loss_function(handle: ?*CnnHandle, loss: LossType) void;
 extern "c" fn cnn_uses_batch_norm(handle: ?*const CnnHandle) c_int;
 extern "c" fn cnn_initialize_batch_norm(handle: ?*CnnHandle) void;
 extern "c" fn cnn_get_last_error() ?[*:0]const u8;
@@ -299,6 +302,21 @@ pub const CNN = struct {
     /// Sets the dropout rate.
     pub fn setDropoutRate(self: *CNN, rate: f64) void {
         cnn_set_dropout_rate(self.handle, rate);
+    }
+
+    /// Sets the hidden activation type.
+    pub fn setHiddenActivation(self: *CNN, activation: ActivationType) void {
+        cnn_set_hidden_activation(self.handle, activation);
+    }
+
+    /// Sets the output activation type.
+    pub fn setOutputActivation(self: *CNN, activation: ActivationType) void {
+        cnn_set_output_activation(self.handle, activation);
+    }
+
+    /// Sets the loss function type.
+    pub fn setLossFunction(self: *CNN, loss: LossType) void {
+        cnn_set_loss_function(self.handle, loss);
     }
 
     /// Gets the hidden activation type.

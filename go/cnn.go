@@ -385,6 +385,21 @@ func (c *CNN) SetDropoutRate(rate float64) {
 	C.cnn_set_dropout_rate(c.handle, C.double(rate))
 }
 
+// SetHiddenActivation sets the hidden layer activation type.
+func (c *CNN) SetHiddenActivation(act ActivationType) {
+	C.cnn_set_hidden_activation(c.handle, C.CnnActivationType(act))
+}
+
+// SetOutputActivation sets the output layer activation type.
+func (c *CNN) SetOutputActivation(act ActivationType) {
+	C.cnn_set_output_activation(c.handle, C.CnnActivationType(act))
+}
+
+// SetLossType sets the loss function type.
+func (c *CNN) SetLossType(loss LossType) {
+	C.cnn_set_loss_function(c.handle, C.CnnLossType(loss))
+}
+
 // HiddenActivation returns the hidden layer activation type.
 func (c *CNN) HiddenActivation() ActivationType {
 	return ActivationType(C.cnn_get_hidden_activation(c.handle))

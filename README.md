@@ -28,7 +28,7 @@ GlassBoxAI-CNN is a production-ready, GPU-accelerated Convolutional Neural Netwo
 
 - **Dual GPU backends**: CUDA for NVIDIA GPUs, OpenCL for AMD/Intel/cross-platform GPU acceleration
 - **Multi-language bindings**: Native support for Rust, Python, Node.js, C, C++, Julia, Go, C#, and Zig
-- **Facade pattern architecture**: Clean API separation with deep introspection capabilities
+- **Facade pattern architecture**: Clean API separation with deep introspection and mutation capabilities
 - **Formal verification**: Kani-verified implementation for memory safety guarantees
 - **Qt GUI application**: Visual training interface
 - **CISA/NSA Secure by Design compliance**: Built following government cybersecurity standards
@@ -77,6 +77,7 @@ This project demonstrates enterprise-grade software engineering practices includ
 | **Model Persistence** | JSON serialization for model save/load |
 | **Dropout** | Regularization support during training |
 | **Batch Normalization** | Stabilize training with learnable scale/shift parameters |
+| **Model Mutation** | Modify hyperparameters (activation, loss, learning rate, etc.) on existing models |
 | **ONNX Export/Import** | Interoperability with the global AI ecosystem |
 
 ### GPU Backends
@@ -368,6 +369,13 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let target = vec![0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0];
     let loss = cnn.train_step(&input, &target)?;
 
+    // Mutate hyperparameters
+    cnn.set_learning_rate(0.0001);
+    cnn.set_hidden_activation(ActivationType::Tanh);
+    cnn.set_output_activation(ActivationType::Sigmoid);
+    cnn.set_loss_function(LossType::MSE);
+    cnn.set_gradient_clip(10.0);
+
     // Save/Load
     cnn.save_to_json("model.json")?;
     let loaded = ConvolutionalNeuralNetworkCUDA::load_from_json("model.json")?;
@@ -439,6 +447,13 @@ target = [0.0] * 10
 target[3] = 1.0
 loss = cnn.train_step([0.0] * 784, target)
 
+# Mutate hyperparameters
+cnn.set_hidden_activation("tanh")
+cnn.set_output_activation("sigmoid")
+cnn.set_loss_function("crossentropy")
+cnn.learning_rate = 0.0001
+cnn.gradient_clip = 10.0
+
 # Save/Load
 cnn.save_to_json("model.json")
 loaded = CNN.load_from_json("model.json")
@@ -472,6 +487,13 @@ console.log('Predicted class:', output.indexOf(Math.max(...output)));
 const target = new Array(10).fill(0);
 target[3] = 1.0;
 const loss = cnn.trainStep(new Array(784).fill(0), target);
+
+// Mutate hyperparameters
+cnn.setHiddenActivation(ActivationType.Tanh);
+cnn.setOutputActivation(ActivationType.Sigmoid);
+cnn.setLossFunction(LossType.MSE);
+cnn.learningRate = 0.0001;
+cnn.gradientClip = 10.0;
 
 // Save/Load
 cnn.saveToJson('model.json');
@@ -513,6 +535,13 @@ int main() {
     double output[10];
     cnn_predict(cnn, input, 784, output, 10);
 
+    // Mutate hyperparameters
+    cnn_set_hidden_activation(cnn, CNN_ACTIVATION_TANH);
+    cnn_set_output_activation(cnn, CNN_ACTIVATION_SIGMOID);
+    cnn_set_loss_function(cnn, CNN_LOSS_MSE);
+    cnn_set_learning_rate(cnn, 0.0001);
+    cnn_set_gradient_clip(cnn, 10.0);
+
     cnn_save_to_json(cnn, "model.json");
     cnn_destroy(cnn);
     return 0;
@@ -545,6 +574,13 @@ int main() {
     target[3] = 1.0;
     double loss = cnn.trainStep(input, target);
 
+    // Mutate hyperparameters
+    cnn.setHiddenActivation(ActivationType::Tanh);
+    cnn.setOutputActivation(ActivationType::Sigmoid);
+    cnn.setLossFunction(LossType::MSE);
+    cnn.setLearningRate(0.0001);
+    cnn.setGradientClip(10.0);
+
     cnn.saveToJson("model.json");
     auto loaded = CNN::loadFromJson("model.json");
 
@@ -575,6 +611,13 @@ println("Predicted class: ", argmax(output) - 1)
 target = zeros(Float64, 10)
 target[4] = 1.0  # Class 3 (1-indexed)
 loss = train_step!(cnn, input, target)
+
+# Mutate hyperparameters
+hidden_activation!(cnn, Tanh)
+output_activation!(cnn, Sigmoid)
+loss_function!(cnn, MSE)
+learning_rate!(cnn, 0.0001)
+gradient_clip!(cnn, 10.0)
 
 # Save/Load
 save_to_json(cnn, "model.json")
@@ -618,6 +661,13 @@ func main() {
     loss, _ := net.TrainStep(input, target)
     fmt.Println("Loss:", loss)
 
+    // Mutate hyperparameters
+    net.SetHiddenActivation(cnn.Tanh)
+    net.SetOutputActivation(cnn.Sigmoid)
+    net.SetLossType(cnn.MSE)
+    net.SetLearningRate(0.0001)
+    net.SetGradientClip(10.0)
+
     net.SaveToJSON("model.json")
     loaded, _ := cnn.LoadFromJSON("model.json")
     defer loaded.Close()
@@ -649,6 +699,13 @@ var target = new double[10];
 target[3] = 1.0;
 double loss = cnn.TrainStep(input, target);
 Console.WriteLine($"Loss: {loss}");
+
+// Mutate hyperparameters
+cnn.HiddenActivation = ActivationType.Tanh;
+cnn.OutputActivation = ActivationType.Sigmoid;
+cnn.LossFunction = LossType.MSE;
+cnn.LearningRate = 0.0001;
+cnn.GradientClip = 10.0;
 
 // Save/Load
 cnn.SaveToJson("model.json");
@@ -696,6 +753,13 @@ pub fn main() !void {
     target[3] = 1.0;
     const loss = try net.trainStep(&input, &target);
 
+    // Mutate hyperparameters
+    net.setHiddenActivation(.tanh);
+    net.setOutputActivation(.sigmoid);
+    net.setLossFunction(.mse);
+    net.setLearningRate(0.0001);
+    net.setGradientClip(10.0);
+
     // Save
     try net.saveToJson("model.json");
 }
@@ -719,6 +783,7 @@ facaded_cnn_cuda <command> [options]
 | `train` | Train an existing model |
 | `predict` | Make predictions |
 | `info` | Display model information |
+| `mutate` | Modify hyperparameters of an existing model |
 | `export-onnx` | Export to ONNX format |
 | `import-onnx` | Import from ONNX format |
 | `help` | Show help message |
@@ -743,6 +808,19 @@ facaded_cnn_cuda <command> [options]
 | `--clip=VALUE` | Gradient clipping (default: 5.0) |
 | `--batch-norm` | Enable batch normalization |
 
+### Mutate Options
+
+| Option | Description |
+|--------|-------------|
+| `--model=FILE` | Load model from JSON file (required) |
+| `--save=FILE` | Save mutated model to JSON (required) |
+| `--lr=VALUE` | Set learning rate |
+| `--clip=VALUE` | Set gradient clipping threshold |
+| `--dropout=VALUE` | Set dropout rate |
+| `--hidden-act=TYPE` | Set hidden activation: sigmoid\|tanh\|relu\|linear |
+| `--output-act=TYPE` | Set output activation: sigmoid\|tanh\|relu\|linear |
+| `--loss=TYPE` | Set loss function: mse\|crossentropy |
+
 ### Examples
 
 ```bash
@@ -760,6 +838,11 @@ facaded_cnn_cuda create \
 
 # Model info
 facaded_cnn_cuda info --model=model.json
+
+# Mutate hyperparameters
+facaded_cnn_cuda mutate --model=model.json \
+    --lr=0.0001 --hidden-act=tanh --loss=crossentropy \
+    --save=model_mutated.json
 
 # Export to ONNX
 facaded_cnn_cuda export-onnx --model=model.json --output=model.onnx

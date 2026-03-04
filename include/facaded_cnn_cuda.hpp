@@ -317,6 +317,18 @@ public:
 
     void setDropoutRate(double rate) { cnn_set_dropout_rate(handle_.get(), rate); }
 
+    void setHiddenActivation(ActivationType act) {
+        cnn_set_hidden_activation(handle_.get(), static_cast<CnnActivationType>(act));
+    }
+
+    void setOutputActivation(ActivationType act) {
+        cnn_set_output_activation(handle_.get(), static_cast<CnnActivationType>(act));
+    }
+
+    void setLossFunction(LossType loss) {
+        cnn_set_loss_function(handle_.get(), static_cast<CnnLossType>(loss));
+    }
+
     ActivationType hiddenActivation() const {
         return static_cast<ActivationType>(cnn_get_hidden_activation(handle_.get()));
     }

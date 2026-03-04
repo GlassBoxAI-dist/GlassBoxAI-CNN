@@ -158,6 +158,15 @@ namespace FacadedCnnCuda
         public static extern void cnn_set_dropout_rate(IntPtr handle, double rate);
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void cnn_set_hidden_activation(IntPtr handle, ActivationType activation);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void cnn_set_output_activation(IntPtr handle, ActivationType activation);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void cnn_set_loss_function(IntPtr handle, LossType loss);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
         public static extern ActivationType cnn_get_hidden_activation(IntPtr handle);
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
@@ -384,22 +393,25 @@ namespace FacadedCnnCuda
             set { ThrowIfDisposed(); NativeMethods.cnn_set_dropout_rate(_handle, value); }
         }
 
-        /// <summary>Gets the hidden activation type.</summary>
+        /// <summary>Gets or sets the hidden activation type.</summary>
         public ActivationType HiddenActivation
         {
             get { ThrowIfDisposed(); return NativeMethods.cnn_get_hidden_activation(_handle); }
+            set { ThrowIfDisposed(); NativeMethods.cnn_set_hidden_activation(_handle, value); }
         }
 
-        /// <summary>Gets the output activation type.</summary>
+        /// <summary>Gets or sets the output activation type.</summary>
         public ActivationType OutputActivation
         {
             get { ThrowIfDisposed(); return NativeMethods.cnn_get_output_activation(_handle); }
+            set { ThrowIfDisposed(); NativeMethods.cnn_set_output_activation(_handle, value); }
         }
 
-        /// <summary>Gets the loss function type.</summary>
+        /// <summary>Gets or sets the loss function type.</summary>
         public LossType LossFunction
         {
             get { ThrowIfDisposed(); return NativeMethods.cnn_get_loss_function(_handle); }
+            set { ThrowIfDisposed(); NativeMethods.cnn_set_loss_function(_handle, value); }
         }
 
         /// <summary>Gets whether batch normalization is enabled.</summary>

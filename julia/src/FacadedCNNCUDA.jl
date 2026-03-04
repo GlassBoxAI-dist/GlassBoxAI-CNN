@@ -67,7 +67,7 @@ export predict, train_step!, save_to_json, load_from_json
 export export_to_onnx, import_from_onnx
 export input_width, input_height, input_channels, output_size
 export learning_rate, learning_rate!, gradient_clip, gradient_clip!
-export dropout_rate!, hidden_activation, output_activation, loss_function
+export dropout_rate!, hidden_activation, hidden_activation!, output_activation, output_activation!, loss_function, loss_function!
 export uses_batch_norm, initialize_batch_norm!
 export version
 
@@ -434,6 +434,21 @@ end
 """Set the dropout rate."""
 function dropout_rate!(cnn::CNN, rate::Float64)
     ccall(Libdl.dlsym(libcnn[], :cnn_set_dropout_rate), Cvoid, (Ptr{Cvoid}, Cdouble), cnn.handle, rate)
+end
+
+"""Set the hidden activation type."""
+function hidden_activation!(cnn::CNN, act::ActivationType)
+    ccall(Libdl.dlsym(libcnn[], :cnn_set_hidden_activation), Cvoid, (Ptr{Cvoid}, Cint), cnn.handle, Cint(act))
+end
+
+"""Set the output activation type."""
+function output_activation!(cnn::CNN, act::ActivationType)
+    ccall(Libdl.dlsym(libcnn[], :cnn_set_output_activation), Cvoid, (Ptr{Cvoid}, Cint), cnn.handle, Cint(act))
+end
+
+"""Set the loss function type."""
+function loss_function!(cnn::CNN, loss::LossType)
+    ccall(Libdl.dlsym(libcnn[], :cnn_set_loss_function), Cvoid, (Ptr{Cvoid}, Cint), cnn.handle, Cint(loss))
 end
 
 """Get the hidden activation type."""

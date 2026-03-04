@@ -570,6 +570,30 @@ pub unsafe extern "C" fn cnn_set_dropout_rate(handle: *mut CnnHandle, rate: c_do
     }
 }
 
+/// Sets the hidden activation type.
+#[no_mangle]
+pub unsafe extern "C" fn cnn_set_hidden_activation(handle: *mut CnnHandle, activation: CnnActivationType) {
+    if !handle.is_null() {
+        (*handle).inner.set_hidden_activation(ActivationType::from(activation));
+    }
+}
+
+/// Sets the output activation type.
+#[no_mangle]
+pub unsafe extern "C" fn cnn_set_output_activation(handle: *mut CnnHandle, activation: CnnActivationType) {
+    if !handle.is_null() {
+        (*handle).inner.set_output_activation(ActivationType::from(activation));
+    }
+}
+
+/// Sets the loss function type.
+#[no_mangle]
+pub unsafe extern "C" fn cnn_set_loss_function(handle: *mut CnnHandle, loss: CnnLossType) {
+    if !handle.is_null() {
+        (*handle).inner.set_loss_function(LossType::from(loss));
+    }
+}
+
 /// Gets the hidden activation type.
 #[no_mangle]
 pub unsafe extern "C" fn cnn_get_hidden_activation(handle: *const CnnHandle) -> CnnActivationType {

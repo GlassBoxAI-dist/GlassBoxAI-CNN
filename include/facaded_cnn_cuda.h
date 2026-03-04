@@ -369,6 +369,27 @@ void cnn_set_gradient_clip(CnnHandle* handle, double clip);
 void cnn_set_dropout_rate(CnnHandle* handle, double rate);
 
 /**
+ * @brief Sets the hidden activation type.
+ * @param handle The CNN handle.
+ * @param activation New hidden activation type.
+ */
+void cnn_set_hidden_activation(CnnHandle* handle, CnnActivationType activation);
+
+/**
+ * @brief Sets the output activation type.
+ * @param handle The CNN handle.
+ * @param activation New output activation type.
+ */
+void cnn_set_output_activation(CnnHandle* handle, CnnActivationType activation);
+
+/**
+ * @brief Sets the loss function type.
+ * @param handle The CNN handle.
+ * @param loss New loss function type.
+ */
+void cnn_set_loss_function(CnnHandle* handle, CnnLossType loss);
+
+/**
  * @brief Gets the hidden activation type.
  * @param handle The CNN handle.
  * @return Hidden activation type.

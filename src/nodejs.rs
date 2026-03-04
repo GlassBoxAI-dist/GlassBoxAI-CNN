@@ -402,6 +402,39 @@ impl CNN {
         Ok(())
     }
 
+    /// Sets the hidden activation type.
+    #[napi]
+    pub fn set_hidden_activation(&self, activation: JsActivationType) -> Result<()> {
+        let mut cnn = self
+            .inner
+            .lock()
+            .map_err(|e| Error::from_reason(format!("Failed to acquire lock: {}", e)))?;
+        cnn.set_hidden_activation(ActivationType::from(activation));
+        Ok(())
+    }
+
+    /// Sets the output activation type.
+    #[napi]
+    pub fn set_output_activation(&self, activation: JsActivationType) -> Result<()> {
+        let mut cnn = self
+            .inner
+            .lock()
+            .map_err(|e| Error::from_reason(format!("Failed to acquire lock: {}", e)))?;
+        cnn.set_output_activation(ActivationType::from(activation));
+        Ok(())
+    }
+
+    /// Sets the loss function type.
+    #[napi]
+    pub fn set_loss_function(&self, loss_type: JsLossType) -> Result<()> {
+        let mut cnn = self
+            .inner
+            .lock()
+            .map_err(|e| Error::from_reason(format!("Failed to acquire lock: {}", e)))?;
+        cnn.set_loss_function(LossType::from(loss_type));
+        Ok(())
+    }
+
     /// Returns the hidden activation type as a string.
     #[napi(getter)]
     pub fn hidden_activation(&self) -> Result<String> {

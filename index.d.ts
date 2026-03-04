@@ -203,6 +203,24 @@ export class CNN {
   setDropoutRate(rate: number): void;
 
   /**
+   * Sets the hidden activation type.
+   * @param activation - Activation type to use for hidden layers
+   */
+  setHiddenActivation(activation: ActivationType): void;
+
+  /**
+   * Sets the output activation type.
+   * @param activation - Activation type to use for the output layer
+   */
+  setOutputActivation(activation: ActivationType): void;
+
+  /**
+   * Sets the loss function type.
+   * @param lossType - Loss function type to use for training
+   */
+  setLossFunction(lossType: LossType): void;
+
+  /**
    * Initializes batch normalization for all convolutional layers.
    */
   initializeBatchNorm(): void;

@@ -216,6 +216,30 @@ class CNN:
         """
         ...
 
+    def set_hidden_activation(self, activation: str) -> None:
+        """Sets the hidden activation type.
+
+        Args:
+            activation: Activation type string ('sigmoid', 'tanh', 'relu', 'linear')
+        """
+        ...
+
+    def set_output_activation(self, activation: str) -> None:
+        """Sets the output activation type.
+
+        Args:
+            activation: Activation type string ('sigmoid', 'tanh', 'relu', 'linear')
+        """
+        ...
+
+    def set_loss_function(self, loss_type: str) -> None:
+        """Sets the loss function type.
+
+        Args:
+            loss_type: Loss type string ('mse', 'crossentropy')
+        """
+        ...
+
     def initialize_batch_norm(self) -> None:
         """Initializes batch normalization for all convolutional layers."""
         ...

@@ -61,6 +61,7 @@ pub enum Command {
     Help,
     ExportOnnx,
     ImportOnnx,
+    Mutate,
 }
 
 /// Batch normalization parameters for a layer.
@@ -1400,6 +1401,15 @@ impl ConvolutionalNeuralNetworkCUDA {
     /// Sets the gradient clipping threshold.
     pub fn set_gradient_clip(&mut self, clip: f64) { self.gradient_clip = clip; }
 
+    /// Sets the hidden activation function type.
+    pub fn set_hidden_activation(&mut self, act: ActivationType) { self.hidden_activation = act; }
+
+    /// Sets the output activation function type.
+    pub fn set_output_activation(&mut self, act: ActivationType) { self.output_activation = act; }
+
+    /// Sets the loss function type.
+    pub fn set_loss_function(&mut self, loss: LossType) { self.loss_function = loss; }
+
     /// Returns the hidden activation type.
     pub fn get_hidden_activation(&self) -> ActivationType { self.hidden_activation }
 
@@ -1960,6 +1970,7 @@ pub fn parse_command(cmd: &str) -> Command {
         "predict" => Command::Predict,
         "export-onnx" => Command::ExportOnnx,
         "import-onnx" => Command::ImportOnnx,
+        "mutate" => Command::Mutate,
         _ => Command::None,
     }
 }

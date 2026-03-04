@@ -71,6 +71,7 @@ fn print_help() {
     println!("  train        Train an existing model with data from JSON");
     println!("  predict      Make predictions with a trained model from JSON");
     println!("  info         Display model information from JSON");
+    println!("  mutate       Modify hyperparameters of an existing model");
     println!("  export-onnx  Export model to ONNX binary format");
     println!("  import-onnx  Import model from ONNX binary format");
     println!("  help         Show this help message");
@@ -107,6 +108,16 @@ fn print_help() {
     println!("Info Options:");
     println!("  --model=FILE.json      Load model from JSON file (required)");
     println!();
+    println!("Mutate Options:");
+    println!("  --model=FILE.json      Load model from JSON file (required)");
+    println!("  --save=FILE.json       Save mutated model to JSON (required)");
+    println!("  --lr=VALUE             Set learning rate");
+    println!("  --clip=VALUE           Set gradient clipping threshold");
+    println!("  --dropout=VALUE        Set dropout rate");
+    println!("  --hidden-act=TYPE      Set hidden activation: sigmoid|tanh|relu|linear");
+    println!("  --output-act=TYPE      Set output activation: sigmoid|tanh|relu|linear");
+    println!("  --loss=TYPE            Set loss function: mse|crossentropy");
+    println!();
     println!("Export ONNX Options:");
     println!("  --model=FILE.json      Load model from JSON file (required)");
     println!("  --output=FILE.onnx     Save model to ONNX binary file (required)");
@@ -121,6 +132,7 @@ fn print_help() {
     println!("  cnn train --model=model.json --data=data.csv --epochs=50 --save=model_trained.json");
     println!("  cnn predict --model=model_trained.json --data=test.csv --output=predictions.csv");
     println!("  cnn info --model=model.json");
+    println!("  cnn mutate --model=model.json --lr=0.0001 --hidden-act=tanh --loss=crossentropy --save=model_mutated.json");
     println!("  cnn export-onnx --model=model.json --output=model.onnx");
     println!("  cnn import-onnx --input=model.onnx --save=model.json");
 }
@@ -327,6 +339,82 @@ fn handle_predict(args: &[String]) {
     println!("See the library API for complete prediction implementation.");
 }
 
+fn handle_mutate(args: &[String]) -> Result<(), Box<dyn std::error::Error>> {
+    let model_file = get_arg_value(args, "--model", "");
+    let save_file = get_arg_value(args, "--save", "");
+
+    if model_file.is_empty() {
+        eprintln!("Error: --model argument is required for mutate command");
+        return Ok(());
+    }
+    if save_file.is_empty() {
+        eprintln!("Error: --save argument is required for mutate command");
+        return Ok(());
+    }
+
+    println!("Loading model from: {}", model_file);
+    let mut cnn = ConvolutionalNeuralNetworkCUDA::load_from_json(&model_file)?;
+
+    let mut mutations = Vec::new();
+
+    let lr_str = get_arg_value(args, "--lr", "");
+    if !lr_str.is_empty() {
+        let lr: f64 = lr_str.parse()?;
+        cnn.set_learning_rate(lr);
+        mutations.push(format!("learning_rate = {:.6}", lr));
+    }
+
+    let clip_str = get_arg_value(args, "--clip", "");
+    if !clip_str.is_empty() {
+        let clip: f64 = clip_str.parse()?;
+        cnn.set_gradient_clip(clip);
+        mutations.push(format!("gradient_clip = {:.2}", clip));
+    }
+
+    let dropout_str = get_arg_value(args, "--dropout", "");
+    if !dropout_str.is_empty() {
+        let dropout: f64 = dropout_str.parse()?;
+        cnn.set_dropout_rate(dropout);
+        mutations.push(format!("dropout_rate = {:.4}", dropout));
+    }
+
+    let hidden_act_str = get_arg_value(args, "--hidden-act", "");
+    if !hidden_act_str.is_empty() {
+        let act = parse_activation(&hidden_act_str);
+        cnn.set_hidden_activation(act);
+        mutations.push(format!("hidden_activation = {}", activation_to_str(act)));
+    }
+
+    let output_act_str = get_arg_value(args, "--output-act", "");
+    if !output_act_str.is_empty() {
+        let act = parse_activation(&output_act_str);
+        cnn.set_output_activation(act);
+        mutations.push(format!("output_activation = {}", activation_to_str(act)));
+    }
+
+    let loss_str = get_arg_value(args, "--loss", "");
+    if !loss_str.is_empty() {
+        let loss = parse_loss(&loss_str);
+        cnn.set_loss_function(loss);
+        mutations.push(format!("loss_function = {}", loss_to_str(loss)));
+    }
+
+    if mutations.is_empty() {
+        println!("No mutations specified. Use --lr, --clip, --dropout, --hidden-act, --output-act, or --loss.");
+        return Ok(());
+    }
+
+    println!("Applied mutations:");
+    for m in &mutations {
+        println!("  {}", m);
+    }
+
+    cnn.save_to_json(&save_file)?;
+    println!("Mutated model saved to: {}", save_file);
+
+    Ok(())
+}
+
 fn handle_export_onnx(args: &[String]) -> Result<(), Box<dyn std::error::Error>> {
     let model_file = get_arg_value(args, "--model", "");
     let output_file = get_arg_value(args, "--output", "");
@@ -415,6 +503,11 @@ fn main() {
         }
         Command::Predict => {
             handle_predict(&args);
+        }
+        Command::Mutate => {
+            if let Err(e) = handle_mutate(&args) {
+                eprintln!("Error: {}", e);
+            }
         }
         Command::ExportOnnx => {
             if let Err(e) = handle_export_onnx(&args) {
