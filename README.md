@@ -54,11 +54,12 @@ This project demonstrates enterprise-grade software engineering practices includ
    - [Go API](#go-api)
    - [C# API](#c-api-2)
    - [Zig API](#zig-api)
-   7. [CLI Reference](#cli-reference)
-   8. [Formal Verification with Kani](#formal-verification-with-kani)
-   9. [CISA/NSA Compliance](#cisansa-compliance)
-   10. [License](#license)
-   11. [Author](#author)
+7. [Facade API](#facade-api)
+8. [CLI Reference](#cli-reference)
+9. [Formal Verification with Kani](#formal-verification-with-kani)
+10. [CISA/NSA Compliance](#cisansa-compliance)
+11. [License](#license)
+12. [Author](#author)
 
 ---
 
@@ -369,13 +370,6 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let target = vec![0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0];
     let loss = cnn.train_step(&input, &target)?;
 
-    // Mutate hyperparameters
-    cnn.set_learning_rate(0.0001);
-    cnn.set_hidden_activation(ActivationType::Tanh);
-    cnn.set_output_activation(ActivationType::Sigmoid);
-    cnn.set_loss_function(LossType::MSE);
-    cnn.set_gradient_clip(10.0);
-
     // Save/Load
     cnn.save_to_json("model.json")?;
     let loaded = ConvolutionalNeuralNetworkCUDA::load_from_json("model.json")?;
@@ -447,13 +441,6 @@ target = [0.0] * 10
 target[3] = 1.0
 loss = cnn.train_step([0.0] * 784, target)
 
-# Mutate hyperparameters
-cnn.set_hidden_activation("tanh")
-cnn.set_output_activation("sigmoid")
-cnn.set_loss_function("crossentropy")
-cnn.learning_rate = 0.0001
-cnn.gradient_clip = 10.0
-
 # Save/Load
 cnn.save_to_json("model.json")
 loaded = CNN.load_from_json("model.json")
@@ -487,13 +474,6 @@ console.log('Predicted class:', output.indexOf(Math.max(...output)));
 const target = new Array(10).fill(0);
 target[3] = 1.0;
 const loss = cnn.trainStep(new Array(784).fill(0), target);
-
-// Mutate hyperparameters
-cnn.setHiddenActivation(ActivationType.Tanh);
-cnn.setOutputActivation(ActivationType.Sigmoid);
-cnn.setLossFunction(LossType.MSE);
-cnn.learningRate = 0.0001;
-cnn.gradientClip = 10.0;
 
 // Save/Load
 cnn.saveToJson('model.json');
@@ -535,13 +515,6 @@ int main() {
     double output[10];
     cnn_predict(cnn, input, 784, output, 10);
 
-    // Mutate hyperparameters
-    cnn_set_hidden_activation(cnn, CNN_ACTIVATION_TANH);
-    cnn_set_output_activation(cnn, CNN_ACTIVATION_SIGMOID);
-    cnn_set_loss_function(cnn, CNN_LOSS_MSE);
-    cnn_set_learning_rate(cnn, 0.0001);
-    cnn_set_gradient_clip(cnn, 10.0);
-
     cnn_save_to_json(cnn, "model.json");
     cnn_destroy(cnn);
     return 0;
@@ -574,13 +547,6 @@ int main() {
     target[3] = 1.0;
     double loss = cnn.trainStep(input, target);
 
-    // Mutate hyperparameters
-    cnn.setHiddenActivation(ActivationType::Tanh);
-    cnn.setOutputActivation(ActivationType::Sigmoid);
-    cnn.setLossFunction(LossType::MSE);
-    cnn.setLearningRate(0.0001);
-    cnn.setGradientClip(10.0);
-
     cnn.saveToJson("model.json");
     auto loaded = CNN::loadFromJson("model.json");
 
@@ -611,13 +577,6 @@ println("Predicted class: ", argmax(output) - 1)
 target = zeros(Float64, 10)
 target[4] = 1.0  # Class 3 (1-indexed)
 loss = train_step!(cnn, input, target)
-
-# Mutate hyperparameters
-hidden_activation!(cnn, Tanh)
-output_activation!(cnn, Sigmoid)
-loss_function!(cnn, MSE)
-learning_rate!(cnn, 0.0001)
-gradient_clip!(cnn, 10.0)
 
 # Save/Load
 save_to_json(cnn, "model.json")
@@ -661,13 +620,6 @@ func main() {
     loss, _ := net.TrainStep(input, target)
     fmt.Println("Loss:", loss)
 
-    // Mutate hyperparameters
-    net.SetHiddenActivation(cnn.Tanh)
-    net.SetOutputActivation(cnn.Sigmoid)
-    net.SetLossType(cnn.MSE)
-    net.SetLearningRate(0.0001)
-    net.SetGradientClip(10.0)
-
     net.SaveToJSON("model.json")
     loaded, _ := cnn.LoadFromJSON("model.json")
     defer loaded.Close()
@@ -699,13 +651,6 @@ var target = new double[10];
 target[3] = 1.0;
 double loss = cnn.TrainStep(input, target);
 Console.WriteLine($"Loss: {loss}");
-
-// Mutate hyperparameters
-cnn.HiddenActivation = ActivationType.Tanh;
-cnn.OutputActivation = ActivationType.Sigmoid;
-cnn.LossFunction = LossType.MSE;
-cnn.LearningRate = 0.0001;
-cnn.GradientClip = 10.0;
 
 // Save/Load
 cnn.SaveToJson("model.json");
@@ -753,16 +698,278 @@ pub fn main() !void {
     target[3] = 1.0;
     const loss = try net.trainStep(&input, &target);
 
-    // Mutate hyperparameters
-    net.setHiddenActivation(.tanh);
-    net.setOutputActivation(.sigmoid);
-    net.setLossFunction(.mse);
-    net.setLearningRate(0.0001);
-    net.setGradientClip(10.0);
-
     // Save
     try net.saveToJson("model.json");
 }
+```
+
+---
+
+## **Facade API**
+
+The facade pattern provides two complementary capabilities across all language bindings:
+
+- **Introspection** — read-only access to model architecture and hyperparameters
+- **Mutation** — modify hyperparameters on an existing model without rebuilding it
+
+### Introspection (Getters)
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `input_width` | `i32` | Input image width |
+| `input_height` | `i32` | Input image height |
+| `input_channels` | `i32` | Number of input channels |
+| `output_size` | `i32` | Number of output classes |
+| `learning_rate` | `f64` | Current learning rate |
+| `gradient_clip` | `f64` | Gradient clipping threshold |
+| `hidden_activation` | `ActivationType` | Hidden layer activation function |
+| `output_activation` | `ActivationType` | Output layer activation function |
+| `loss_function` | `LossType` | Loss function |
+| `conv_filters` | `[i32]` | Convolutional filter counts per layer |
+| `kernel_sizes` | `[i32]` | Kernel sizes per convolutional layer |
+| `pool_sizes` | `[i32]` | Pool sizes per pooling layer |
+| `fc_sizes` | `[i32]` | Neuron counts per fully-connected layer |
+| `uses_batch_norm` | `bool` | Whether batch normalization is enabled |
+
+### Mutation (Setters)
+
+| Setter | Type | Description |
+|--------|------|-------------|
+| `set_learning_rate` | `f64` | Update the learning rate |
+| `set_gradient_clip` | `f64` | Update the gradient clipping threshold |
+| `set_dropout_rate` | `f64` | Update the dropout rate (0.0–1.0) |
+| `set_hidden_activation` | `ActivationType` | Change the hidden layer activation function |
+| `set_output_activation` | `ActivationType` | Change the output layer activation function |
+| `set_loss_function` | `LossType` | Change the loss function |
+
+### **Rust**
+
+```rust
+// Introspection
+let w = cnn.get_input_width();
+let h = cnn.get_input_height();
+let c = cnn.get_input_channels();
+let n = cnn.get_output_size();
+let lr = cnn.get_learning_rate();
+let clip = cnn.get_gradient_clip();
+let h_act = cnn.get_hidden_activation();
+let o_act = cnn.get_output_activation();
+let loss = cnn.get_loss_function();
+let filters = cnn.get_conv_filters();
+let kernels = cnn.get_kernel_sizes();
+let pools = cnn.get_pool_sizes();
+let fcs = cnn.get_fc_sizes();
+let bn = cnn.uses_batch_norm();
+
+// Mutation
+cnn.set_learning_rate(0.0001);
+cnn.set_gradient_clip(10.0);
+cnn.set_dropout_rate(0.5);
+cnn.set_hidden_activation(ActivationType::Tanh);
+cnn.set_output_activation(ActivationType::Sigmoid);
+cnn.set_loss_function(LossType::MSE);
+```
+
+### **Python**
+
+```python
+# Introspection (properties)
+w = cnn.input_width
+h = cnn.input_height
+c = cnn.input_channels
+n = cnn.output_size
+lr = cnn.learning_rate
+clip = cnn.gradient_clip
+h_act = cnn.hidden_activation
+o_act = cnn.output_activation
+loss = cnn.loss_function
+filters = cnn.conv_filters
+kernels = cnn.kernel_sizes
+pools = cnn.pool_sizes
+fcs = cnn.fc_sizes
+bn = cnn.uses_batch_norm
+
+# Mutation (properties and methods)
+cnn.learning_rate = 0.0001
+cnn.gradient_clip = 10.0
+cnn.set_dropout_rate(0.5)
+cnn.set_hidden_activation("tanh")
+cnn.set_output_activation("sigmoid")
+cnn.set_loss_function("crossentropy")
+```
+
+### **Node.js**
+
+```javascript
+// Introspection (getters)
+const w = cnn.inputWidth;
+const h = cnn.inputHeight;
+const c = cnn.inputChannels;
+const n = cnn.outputSize;
+const lr = cnn.learningRate;
+const clip = cnn.gradientClip;
+const hAct = cnn.hiddenActivation;
+const oAct = cnn.outputActivation;
+const loss = cnn.lossFunction;
+const filters = cnn.convFilters;
+const kernels = cnn.kernelSizes;
+const pools = cnn.poolSizes;
+const fcs = cnn.fcSizes;
+const bn = cnn.usesBatchNorm;
+
+// Mutation (setters and methods)
+cnn.learningRate = 0.0001;
+cnn.gradientClip = 10.0;
+cnn.setDropoutRate(0.5);
+cnn.setHiddenActivation(ActivationType.Tanh);
+cnn.setOutputActivation(ActivationType.Sigmoid);
+cnn.setLossFunction(LossType.MSE);
+```
+
+### **C**
+
+```c
+// Introspection
+int w = cnn_get_input_width(cnn);
+int h = cnn_get_input_height(cnn);
+int c = cnn_get_input_channels(cnn);
+int n = cnn_get_output_size(cnn);
+double lr = cnn_get_learning_rate(cnn);
+double clip = cnn_get_gradient_clip(cnn);
+CnnActivationType h_act = cnn_get_hidden_activation(cnn);
+CnnActivationType o_act = cnn_get_output_activation(cnn);
+CnnLossType loss = cnn_get_loss_function(cnn);
+int bn = cnn_uses_batch_norm(cnn);
+
+// Mutation
+cnn_set_learning_rate(cnn, 0.0001);
+cnn_set_gradient_clip(cnn, 10.0);
+cnn_set_dropout_rate(cnn, 0.5);
+cnn_set_hidden_activation(cnn, CNN_ACTIVATION_TANH);
+cnn_set_output_activation(cnn, CNN_ACTIVATION_SIGMOID);
+cnn_set_loss_function(cnn, CNN_LOSS_MSE);
+```
+
+### **C++**
+
+```cpp
+using namespace facaded_cnn;
+
+// Introspection
+int w = cnn.inputWidth();
+int h = cnn.inputHeight();
+int c = cnn.inputChannels();
+int n = cnn.outputSize();
+double lr = cnn.learningRate();
+double clip = cnn.gradientClip();
+ActivationType hAct = cnn.hiddenActivation();
+ActivationType oAct = cnn.outputActivation();
+LossType loss = cnn.lossFunction();
+bool bn = cnn.usesBatchNorm();
+
+// Mutation
+cnn.setLearningRate(0.0001);
+cnn.setGradientClip(10.0);
+cnn.setDropoutRate(0.5);
+cnn.setHiddenActivation(ActivationType::Tanh);
+cnn.setOutputActivation(ActivationType::Sigmoid);
+cnn.setLossFunction(LossType::MSE);
+```
+
+### **Julia**
+
+```julia
+# Introspection (getter functions)
+w = input_width(cnn)
+h = input_height(cnn)
+c = input_channels(cnn)
+n = output_size(cnn)
+lr = learning_rate(cnn)
+clip = gradient_clip(cnn)
+h_act = hidden_activation(cnn)
+o_act = output_activation(cnn)
+loss = loss_function(cnn)
+bn = uses_batch_norm(cnn)
+
+# Mutation (setter! functions)
+learning_rate!(cnn, 0.0001)
+gradient_clip!(cnn, 10.0)
+dropout_rate!(cnn, 0.5)
+hidden_activation!(cnn, Tanh)
+output_activation!(cnn, Sigmoid)
+loss_function!(cnn, MSE)
+```
+
+### **Go**
+
+```go
+// Introspection
+w := net.InputWidth()
+h := net.InputHeight()
+c := net.InputChannels()
+n := net.OutputSize()
+lr := net.LearningRate()
+clip := net.GradientClip()
+hAct := net.HiddenActivation()
+oAct := net.OutputActivation()
+loss := net.GetLossType()
+bn := net.UsesBatchNorm()
+
+// Mutation
+net.SetLearningRate(0.0001)
+net.SetGradientClip(10.0)
+net.SetDropoutRate(0.5)
+net.SetHiddenActivation(cnn.Tanh)
+net.SetOutputActivation(cnn.Sigmoid)
+net.SetLossType(cnn.MSE)
+```
+
+### **C#**
+
+```csharp
+// Introspection (.NET properties)
+int w = cnn.InputWidth;
+int h = cnn.InputHeight;
+int c = cnn.InputChannels;
+int n = cnn.OutputSize;
+double lr = cnn.LearningRate;
+double clip = cnn.GradientClip;
+ActivationType hAct = cnn.HiddenActivation;
+ActivationType oAct = cnn.OutputActivation;
+LossType loss = cnn.LossFunction;
+bool bn = cnn.UsesBatchNorm;
+
+// Mutation (.NET properties)
+cnn.LearningRate = 0.0001;
+cnn.GradientClip = 10.0;
+cnn.DropoutRate = 0.5;
+cnn.HiddenActivation = ActivationType.Tanh;
+cnn.OutputActivation = ActivationType.Sigmoid;
+cnn.LossFunction = LossType.MSE;
+```
+
+### **Zig**
+
+```zig
+// Introspection
+const w = net.inputWidth();
+const h = net.inputHeight();
+const c = net.inputChannels();
+const n = net.outputSize();
+const lr = net.learningRate();
+const clip = net.gradientClip();
+const h_act = net.hiddenActivation();
+const o_act = net.outputActivation();
+const loss = net.lossFunction();
+const bn = net.usesBatchNorm();
+
+// Mutation
+net.setLearningRate(0.0001);
+net.setGradientClip(10.0);
+net.setDropoutRate(0.5);
+net.setHiddenActivation(.tanh);
+net.setOutputActivation(.sigmoid);
+net.setLossFunction(.mse);
 ```
 
 ---
